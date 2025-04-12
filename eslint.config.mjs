@@ -7,13 +7,13 @@ const __dirname = dirname(__filename);
 
 const compat = new FlatCompat({
     baseDirectory: __dirname,
-    allConfig: {
-        globalIgnores: ["src/generated/**/*"]
-    }
 });
 
 const eslintConfig = [
     ...compat.extends("next/core-web-vitals", "next/typescript"),
+    ...compat.config({
+        ignorePatterns: ["src/generated/**/*"],
+    })
 ];
 
 export default eslintConfig;
