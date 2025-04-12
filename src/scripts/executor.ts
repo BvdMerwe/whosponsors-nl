@@ -3,6 +3,7 @@ import path from "node:path";
 const [, , filePath] = process.argv;
 const modulePath = path.resolve(filePath);
 
+/* eslint-disable @typescript-eslint/no-require-imports */
 const script = require(modulePath);
 
 if (typeof script["default"] === "function") {

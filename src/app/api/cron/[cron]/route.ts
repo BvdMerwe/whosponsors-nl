@@ -8,13 +8,15 @@ export async function POST(
     const { cron } = await params;
 
     switch (cron) {
-        case "update-all-sponsor":
-            await updateAllSponsor();
-            break;
+    case "update-all-sponsor":
+        await updateAllSponsor();
+        break;
     }
 
     return Response.json({
         status: "success",
-    }, { status: 200 });
+    }, {
+        status: 200,
+    });
 }
 

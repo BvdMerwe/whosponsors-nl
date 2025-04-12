@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { JSDOM } from "jsdom";
 
 interface ScraperOptionType {
@@ -94,14 +95,14 @@ export default class Scraper {
         }
 
         switch (direction) {
-            case PaginationDirectionEnum.FORWARD:
-                this.handlePaginationForward();
-                break;
-            case PaginationDirectionEnum.BACK:
-                this.handlePaginationBackward();
-                break;
-            default:
-                throw "Nope!";
+        case PaginationDirectionEnum.FORWARD:
+            this.handlePaginationForward();
+            break;
+        case PaginationDirectionEnum.BACK:
+            this.handlePaginationBackward();
+            break;
+        default:
+            throw "Nope!";
         }
 
         return this.fetchDom();
@@ -151,10 +152,6 @@ export default class Scraper {
     }
 }
 
-export {
-    PaginationDirectionEnum, PaginationTypeEnum,
-};
+export { PaginationDirectionEnum, PaginationTypeEnum };
 
-export type {
-    PaginatorType, ScraperOptionType,
-};
+export type { PaginatorType, ScraperOptionType };

@@ -13,6 +13,8 @@ export default function handle(request: NextRequest): NextResponse {
     if (headerAuth?.split("Bearer ")[1] === process.env.NEXT_CRON_KEY) {
         return NextResponse.next();
     } else {
-        return NextResponse.json("Unauthorized.", { status: 401 });
+        return NextResponse.json("Unauthorized.", {
+            status: 401,
+        });
     }
 }

@@ -41,8 +41,6 @@ async function getData({
         });
     }
 
-    console.log(allIndustry);
-
     if (isArray(allIndustry)) {
         allIndustry.forEach((industry) => queryIndustry.push({
             industry: {
