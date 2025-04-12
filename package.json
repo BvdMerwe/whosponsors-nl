@@ -7,7 +7,7 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "postinstall": "printenv && prisma generate && prisma migrate deploy"
+        "postinstall": "prisma generate && prisma migrate deploy"
     },
     "dependencies": {
         "@prisma/client": "^6.6.0",
