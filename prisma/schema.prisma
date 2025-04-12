@@ -24,6 +24,6 @@ model Company {
 model Industry {
   id      Int       @id @default(autoincrement())
   name    String
-  slug    String
+  slug    String    @unique
   Company Company[]
 }

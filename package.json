@@ -7,24 +7,44 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "postinstall": "prisma generate && prisma migrate deploy"
+        "postinstall": "prisma generate && prisma migrate deploy",
+        "exec-script": "ts-node src/scripts/executor.ts"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-free": "^6.7.2",
         "@prisma/client": "^6.6.0",
+        "@radix-ui/react-dropdown-menu": "^2.1.7",
+        "@radix-ui/react-slot": "^1.2.0",
+        "@tanstack/react-table": "^8.21.2",
+        "@types/jsdom": "^21.1.7",
+        "class-variance-authority": "^0.7.1",
+        "classcat": "^5.0.5",
+        "clsx": "^2.1.1",
+        "jsdom": "^26.0.0",
+        "lucide-react": "^0.487.0",
         "next": "15.3.0",
         "react": "^19.0.0",
-        "react-dom": "^19.0.0"
+        "react-dom": "^19.0.0",
+        "tailwind-merge": "^3.2.0",
+        "ts-node": "^10.9.2",
+        "tw-animate-css": "^1.2.5"
     },
     "devDependencies": {
         "@eslint/eslintrc": "^3",
+        "@stylistic/eslint-plugin-js": "^4.2.0",
         "@tailwindcss/postcss": "^4",
         "@types/node": "^20",
         "@types/react": "^19",
         "@types/react-dom": "^19",
         "eslint": "^9",
         "eslint-config-next": "15.3.0",
+        "eslint-plugin-react": "^7.37.5",
         "prisma": "^6.6.0",
         "tailwindcss": "^4",
+        "tsconfig-paths": "^4.2.0",
         "typescript": "^5"
+    },
+    "prisma": {
+        "seed": "ts-node prisma/seeder/seed.ts"
     }
 }
