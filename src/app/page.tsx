@@ -66,7 +66,7 @@ async function getData({
             take: PAGE_SIZE,
             skip: PAGE_SIZE * pageIndex,
             orderBy: {
-                id: "asc",
+                tradeName: "asc",
             },
             include: {
                 industries: true,
@@ -103,7 +103,7 @@ export default async function Home({ searchParams }: {
         <div className="container mx-auto py-10 px-4">
             <h1 className="text-3xl mb-4 font-bold text-center">Who sponsors HSM Visas in the Netherlands?</h1>
             <p className="text-center text-balance mb-8">
-                This list was pulled from the <a href="https://ind.nl/en/public-register-recognised-sponsors/public-register-regular-labour-and-highly-skilled-migrants" target="_blank">IND public register</a> and (badly) categorized by AI. If you spot mistakes, please feel free to raise an issue in <a href="https://github.com/BvdMerwe/whosponsors-nl/issues" target="_blank">GitHub</a>.
+                This list was pulled from the <a href="https://ind.nl/en/public-register-recognised-sponsors/public-register-regular-labour-and-highly-skilled-migrants" target="_blank">IND public register</a> and is currently being categorized by AI. If you spot mistakes, please feel free to raise an issue in <a href="https://github.com/BvdMerwe/whosponsors-nl/issues" target="_blank">GitHub</a>.
             </p>
             <div className="mb-4 flex items-center space-x-2 w-full">
                 <SearchFilter searchStringInitial={tradeName as string | undefined} />
