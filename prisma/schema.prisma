@@ -15,15 +15,14 @@ datasource db {
 }
 
 model Company {
-  id         Int      @id @default(autoincrement())
-  tradeName  String   @unique
-  industry   Industry @relation(fields: [industryId], references: [id])
-  industryId Int
+  id         Int        @id @default(autoincrement())
+  tradeName  String     @unique
+  industries Industry[]
 }
 
 model Industry {
-  id      Int       @id @default(autoincrement())
-  name    String
-  slug    String    @unique
-  Company Company[]
+  id        Int       @id @default(autoincrement())
+  name      String
+  slug      String    @unique
+  companies Company[]
 }

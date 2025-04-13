@@ -71,10 +71,12 @@ export default class Scraper {
     }
 
     public async fetchDom(): Promise<Document> {
-        const res = await fetch(this.url);
+        const res = await fetch(this.url.toString());
         const html = await res.text();
 
-        this.domCurrent = (new JSDOM(html)).window.document;
+        const jsDom = new JSDOM(html);
+
+        this.domCurrent = jsDom.window.document;
 
         return this.assertDomCurrent();
     }

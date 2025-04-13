@@ -1,0 +1,258 @@
+[
+    {
+        "name": "Unknown",
+        "slug": "unknown"
+    },
+    {
+        "name": "Fishing",
+        "slug": "fishing"
+    },
+    {
+        "name": "Horticulture",
+        "slug": "horticulture"
+    },
+    {
+        "name": "Tobacco",
+        "slug": "tobacco"
+    },
+    {
+        "name": "Wood",
+        "slug": "wood"
+    },
+    {
+        "name": "Aerospace",
+        "slug": "aerospace"
+    },
+    {
+        "name": "Automotive",
+        "slug": "automotive"
+    },
+    {
+        "name": "Chemical",
+        "slug": "chemical"
+    },
+    {
+        "name": "Pharmaceutical",
+        "slug": "pharmaceutical"
+    },
+    {
+        "name": "Construction",
+        "slug": "construction"
+    },
+    {
+        "name": "Defense",
+        "slug": "defense"
+    },
+    {
+        "name": "Arms",
+        "slug": "arms"
+    },
+    {
+        "name": "Electric power",
+        "slug": "electric-power"
+    },
+    {
+        "name": "Electronics",
+        "slug": "electronics"
+    },
+    {
+        "name": "Computer",
+        "slug": "computer"
+    },
+    {
+        "name": "Semiconductor",
+        "slug": "semiconductor"
+    },
+    {
+        "name": "Energy",
+        "slug": "energy"
+    },
+    {
+        "name": "Food",
+        "slug": "food"
+    },
+    {
+        "name": "Drink",
+        "slug": "drink"
+    },
+    {
+        "name": "Industrial robot",
+        "slug": "industrial-robot"
+    },
+    {
+        "name": "Low technology",
+        "slug": "low-technology"
+    },
+    {
+        "name": "Meat",
+        "slug": "meat"
+    },
+    {
+        "name": "Meat packing",
+        "slug": "meat-packing"
+    },
+    {
+        "name": "Mining",
+        "slug": "mining"
+    },
+    {
+        "name": "Oil and gas",
+        "slug": "oil-and-gas"
+    },
+    {
+        "name": "Petroleum",
+        "slug": "petroleum"
+    },
+    {
+        "name": "Oil shale",
+        "slug": "oil-shale"
+    },
+    {
+        "name": "Pulp and paper",
+        "slug": "pulp-and-paper"
+    },
+    {
+        "name": "Steel",
+        "slug": "steel"
+    },
+    {
+        "name": "Shipbuilding",
+        "slug": "shipbuilding"
+    },
+    {
+        "name": "Textile",
+        "slug": "textile"
+    },
+    {
+        "name": "Water",
+        "slug": "water"
+    },
+    {
+        "name": "Broadcasting",
+        "slug": "broadcasting"
+    },
+    {
+        "name": "Radio",
+        "slug": "radio"
+    },
+    {
+        "name": "Television",
+        "slug": "television"
+    },
+    {
+        "name": "Creative industries",
+        "slug": "creative-industries"
+    },
+    {
+        "name": "Advertising",
+        "slug": "advertising"
+    },
+    {
+        "name": "Fashion",
+        "slug": "fashion"
+    },
+    {
+        "name": "Floral",
+        "slug": "floral"
+    },
+    {
+        "name": "Cultural",
+        "slug": "cultural"
+    },
+    {
+        "name": "Education",
+        "slug": "education"
+    },
+    {
+        "name": "Entertainment",
+        "slug": "entertainment"
+    },
+    {
+        "name": "Music",
+        "slug": "music"
+    },
+    {
+        "name": "Film",
+        "slug": "film"
+    },
+    {
+        "name": "Gambling",
+        "slug": "gambling"
+    },
+    {
+        "name": "Video game",
+        "slug": "video-game"
+    },
+    {
+        "name": "Financial services",
+        "slug": "financial-services"
+    },
+    {
+        "name": "Insurance",
+        "slug": "insurance"
+    },
+    {
+        "name": "Healthcare",
+        "slug": "healthcare"
+    },
+    {
+        "name": "Hospitality",
+        "slug": "hospitality"
+    },
+    {
+        "name": "Information",
+        "slug": "information"
+    },
+    {
+        "name": "Leisure",
+        "slug": "leisure"
+    },
+    {
+        "name": "Mass media",
+        "slug": "mass-media"
+    },
+    {
+        "name": "Internet",
+        "slug": "internet"
+    },
+    {
+        "name": "News media",
+        "slug": "news-media"
+    },
+    {
+        "name": "Publishing",
+        "slug": "publishing"
+    },
+    {
+        "name": "Professional services",
+        "slug": "professional-services"
+    },
+    {
+        "name": "Real estate",
+        "slug": "real-estate"
+    },
+    {
+        "name": "Retail",
+        "slug": "retail"
+    },
+    {
+        "name": "Sport",
+        "slug": "sport"
+    },
+    {
+        "name": "Technology",
+        "slug": "technology"
+    },
+    {
+        "name": "Software",
+        "slug": "software"
+    },
+    {
+        "name": "Telecommunications",
+        "slug": "telecommunications"
+    },
+    {
+        "name": "Transport",
+        "slug": "transport"
+    }
+]

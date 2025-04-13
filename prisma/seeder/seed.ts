@@ -1,25 +1,31 @@
 import { PrismaClient } from "@/generated/prisma/client";
+import allIndustry from "./industries.json";
 
 const prisma = new PrismaClient();
 
-async function main() {
-    const unknownCompany = await prisma.industry.upsert({
-        where: {
-            slug: "unknown",
-        },
-        update: {
-            name: "UNKNOWN",
-            slug: "unknown",
-        },
-        create: {
-            name: "UNKNOWN",
-            slug: "unknown",
-        },
-    });
+async function main(): Promise<void> {
+    for (const industry of allIndustry) {
+        const { slug, name } = industry;
 
-    console.log({
-        unknownCompany,
-    });
+        const industryRecord = await prisma.industry.upsert({
+            where: {
+                slug,
+            },
+            update: {
+                name,
+                slug,
+            },
+            create: {
+                name,
+                slug,
+            },
+        });
+
+        /* eslint-disable no-console */
+        console.log({
+            company: industryRecord,
+        });
+    }
 }
 
 main()

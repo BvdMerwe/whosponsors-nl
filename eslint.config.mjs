@@ -136,7 +136,10 @@ const eslintConfig = [
 
             // Object formatting
             "object-curly-newline": ["error", {
-                ObjectExpression: "always",
+                ObjectExpression: {
+                    multiline: true,
+                    minProperties: 1,
+                },
                 ObjectPattern: {
                     multiline: true,
                 },
