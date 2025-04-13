@@ -3,12 +3,6 @@ import { PrismaClient } from "@/generated/prisma";
 
 export default async function updateAllSponsor(): Promise<void> {
     const prisma = new PrismaClient();
-    const industryDefault = await prisma.industry.findFirstOrThrow({
-        where: {
-            slug: "unknown",
-        },
-    });
-
     const allSponsor = await fetchAllSponsor();
 
     /* eslint-disable no-console */
@@ -24,7 +18,11 @@ export default async function updateAllSponsor(): Promise<void> {
             },
             create: {
                 tradeName: company,
-                industryId: industryDefault.id,
+                industries: {
+                    connect: {
+                        id: 1,
+                    },
+                },
             },
         });
     }
