@@ -51,7 +51,6 @@ export default class Prompter {
                 role: "user",
                 content: prompt,
             }],
-
         });
     }
 
