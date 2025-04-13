@@ -1,26 +1,12 @@
+/* eslint-disable no-console */
 import type {
-    BoxModel, Page, Point,
+    BoxModel, Browser, Page, Point,
 } from "puppeteer-core";
 import puppeteer from "puppeteer-core";
 import { NodeHtmlMarkdown } from "node-html-markdown";
 
 export default async function scrapeGoogle(searchQuery: string): Promise<string> {
-    const browser = await puppeteer.connect({
-        // channel: "chrome",
-        // executablePath: "/Applications/Chromium.app/Contents/MacOS/Chromium",
-        browserURL: "http://127.0.0.1:21222/",
-        // userDataDir: "./browserdata/chromium/puppeteer",
-        defaultViewport: {
-            height: 700,
-            width: 1366,
-        },
-        // timeout: 10000,
-        // args: [
-        //     `--user-agent=${getRandomUserAgent()}`,
-        // ],
-        // headless: false,
-    });
-
+    const browser = await getBrowser(true);
     const page = (await browser.pages())[0];
 
     try {
@@ -44,16 +30,18 @@ export default async function scrapeGoogle(searchQuery: string): Promise<string>
         await searchBar.click();
         await searchBar.fill("");
         await page.type("textarea ::-p-aria([name=\"Search\"])", searchQuery, {
-            delay: randomBetween(10, 100),
+            delay: randomBetween(10, 30),
         });
         await waitForTimeout(30);
         await page.keyboard.press("Enter");
 
-        // const searchButton = await page.$("button ::-p-aria([name=\"Search\"])");
-        //
-        // await searchButton?.click();
-        // const boundingBox = await searchButton?.boxModel();
-        // await moveMouseToBoundingBoxAndClick(page, boundingBox);
+        if (randomBetween(0, 2) === 1) {
+            await naturalMouseMovement(page);
+        }
+
+        if (randomBetween(0, 1) === 1) {
+            await naturalMouseScrolling(page);
+        }
 
         await page.waitForSelector("#center_col");
 
@@ -63,6 +51,33 @@ export default async function scrapeGoogle(searchQuery: string): Promise<string>
         return NodeHtmlMarkdown.translate(resultsString);
     } finally {
         await browser.disconnect();
+    }
+}
+
+async function getBrowser(shouldConnect: boolean): Promise<Browser> {
+    if (shouldConnect) {
+        return puppeteer.connect({
+            browserURL: "http://127.0.0.1:21222/",
+            defaultViewport: {
+                height: 700,
+                width: 1366,
+            },
+        });
+    } else {
+        return puppeteer.launch({
+            channel: "chrome",
+            executablePath: "/Applications/Chromium.app/Contents/MacOS/Chromium",
+            userDataDir: "./browserdata/chromium/puppeteer",
+            defaultViewport: {
+                height: 700,
+                width: 1366,
+            },
+            timeout: 10000,
+            args: [
+                `--user-agent=${getRandomUserAgent()}`,
+            ],
+            headless: false,
+        });
     }
 }
 
@@ -128,6 +143,8 @@ async function moveMouseToBoundingBoxAndClick(page: Page, boxModel?: BoxModel | 
         return;
     }
 
+    await drawBox(page, boxModel);
+
     await moveMouseToBoundingBox(page, boxModel);
     await page.mouse.down({
         button: "left",
@@ -180,6 +197,7 @@ async function drawBox(page: Page, boxModel?: BoxModel | null): Promise<void> {
 }
 
 async function naturalMouseMovement(page: Page): Promise<void> {
+    console.log("Moving mouse to trick google.");
     const viewportSize = page.viewport();
 
     if (!viewportSize) return;
@@ -199,5 +217,25 @@ async function naturalMouseMovement(page: Page): Promise<void> {
             steps: randomBetween(10, 20),
         });
         await waitForRandomDelay(10, 20);
+    }
+}
+
+async function naturalMouseScrolling(page: Page): Promise<void> {
+    console.log("Performing natural scrolling to trick google.");
+    await waitForRandomDelay(200, 1000);
+
+    const timesToScroll = randomBetween(2, 5);
+    const scrolls = [];
+
+    for (let i = 0; timesToScroll >= i; i++) {
+        scrolls.push({
+            deltaY: randomBetween(50, 500),
+        });
+    }
+
+    console.log("Scrolling:", scrolls);
+    for (const scroll of scrolls) {
+        await page.mouse.wheel(scroll);
+        await waitForRandomDelay();
     }
 }

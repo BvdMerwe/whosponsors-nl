@@ -7,6 +7,7 @@ interface IndustryInferredType {
     name?: string;
     industryName?: string;
     slug?: string;
+    confidence?: number;
 }
 
 export default async function guessIndustry(): Promise<void> {
@@ -34,6 +35,11 @@ export default async function guessIndustry(): Promise<void> {
 
         if (typeof industry.industryName === "undefined" || typeof industry.slug === "undefined") {
             console.warn("Malformed response.");
+            continue;
+        }
+
+        if ((industry?.confidence ?? 0) < 0.8) {
+            console.warn("Confidence too low.");
             continue;
         }
 
@@ -76,7 +82,13 @@ async function determineIndustryFromScrapedInfo(companyName: string, allIndustry
     const prompt = `
 According to this google search page, what industry is the company searched: ${allIndustryString}
 
-Output only the industry in plain text in this format {"name": "Company Name", "industryName": "Industry Name", "slug": "industry-name"}.
+Output only the industry in plain text in this format 
+{
+    "name": "Company Name", 
+    "industryName": "Industry Name", 
+    "slug": "industry-name", 
+    "confidence": [decimal between 0 and 1 indicating the confidence of the guess],
+}.
 Do not use markdown.
 Use the list of industries to classify the company in question, and if it is not in that list, recommend a new one.
 
