@@ -27,7 +27,7 @@ export default function SearchFilter({ searchStringInitial }: SearchFilterProps)
                 }}
             />
             {searchString === "" ||
-                <i className="fa fa-x fa-sm -ml-[27px] mr-[16px] cursor-pointer" onClick={() => handleSearchStringUpdate("")}></i>}
+                <i className="fa fa-x fa-xs -ml-[27px] mr-[16px] cursor-pointer" onClick={() => handleSearchStringUpdate("")}></i>}
             <Button type="submit" onClick={() => handleSearchStringUpdate(searchString)}>Search</Button>
         </>
     );

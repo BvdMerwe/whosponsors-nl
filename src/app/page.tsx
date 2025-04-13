@@ -43,14 +43,15 @@ async function getData({
 
     if (isArray(allIndustry)) {
         allIndustry.forEach((industry) => queryIndustry.push({
-            industry: {
-                id: industry,
+            industries: {
+                some: {
+                    id: industry,
+                },
             },
         }));
     }
 
-    const filter: CompanyWhereInput = {
-    };
+    const filter: CompanyWhereInput = {};
 
     if (queryName.length > 0) {
         filter.AND = queryName;
@@ -68,7 +69,7 @@ async function getData({
                 id: "asc",
             },
             include: {
-                industry: true,
+                industries: true,
             },
             where: filter,
         }),
@@ -104,10 +105,14 @@ export default async function Home({ searchParams }: {
             <div className="mb-4 flex items-center space-x-2 w-full">
                 <SearchFilter searchStringInitial={tradeName as string | undefined} />
                 <DropdownFilter
-                    allFilter={allIndustry.map((industry) => ({
-                        value: industry.name,
-                        key: industry.id,
-                    }))}
+                    allFilter={
+                        allIndustry
+                            .sort((industry) => allIndustrySelected.includes(industry.id) ? -1 : 1)
+                            .map((industry) => ({
+                                value: industry.name,
+                                key: industry.id,
+                            }))
+                    }
                     filterSelected={allIndustrySelected ?? []}
                 />
             </div>

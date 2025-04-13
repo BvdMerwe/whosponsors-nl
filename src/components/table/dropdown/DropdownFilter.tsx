@@ -31,7 +31,15 @@ export function DropdownFilter({ allFilter, filterSelected }: DropdownFilterProp
                 <Button variant="outline">Filter by industry</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
-                <DropdownMenuLabel>Industries</DropdownMenuLabel>
+                <DropdownMenuLabel className="flex justify-between items-center">
+                    Industries
+                    {selected.length > 0 && (
+                        <i
+                            onClick={() => handleClearAll()}
+                            className="fa fa-x cursor-pointer fa-xs"
+                        />
+                    )}
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {allFilter.map((filter) => (
                     <DropdownMenuCheckboxItem
@@ -56,6 +64,14 @@ function handleCheckedChange(key: number): void {
     } else {
         urlParams.append("industry", keyString);
     }
+
+    window.location.search = urlParams.toString();
+}
+
+function handleClearAll(): void {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    urlParams.delete("industry");
 
     window.location.search = urlParams.toString();
 }
