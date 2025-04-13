@@ -7,7 +7,7 @@ import { NodeHtmlMarkdown } from "node-html-markdown";
 
 export default async function scrapeGoogle(searchQuery: string): Promise<string> {
     const browser = await getBrowser(true);
-    const page = (await browser.pages())[0];
+    const page = (await browser.pages())[0] ?? await browser.newPage();
 
     try {
         if (page.url().indexOf("https://www.google.com/") < 0) {
@@ -39,7 +39,7 @@ export default async function scrapeGoogle(searchQuery: string): Promise<string>
             await naturalMouseMovement(page);
         }
 
-        if (randomBetween(0, 1) === 1) {
+        if (randomBetween(0, 3) <= 2) {
             await naturalMouseScrolling(page);
         }
 
@@ -233,7 +233,6 @@ async function naturalMouseScrolling(page: Page): Promise<void> {
         });
     }
 
-    console.log("Scrolling:", scrolls);
     for (const scroll of scrolls) {
         await page.mouse.wheel(scroll);
         await waitForRandomDelay();
