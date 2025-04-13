@@ -101,7 +101,11 @@ export default async function Home({ searchParams }: {
 
     return (
         <div className="container mx-auto py-10">
-
+            <h1 className="text-3xl mb-4 font-bold text-center">Who sponsors HSM Visas in the Netherlands?</h1>
+            <p className="text-center text-balance mb-8">
+                This list was pulled from the <a href="https://ind.nl/en/public-register-recognised-sponsors/public-register-regular-labour-and-highly-skilled-migrants">IND public register</a>
+                and (badly) categorized by AI. If you spot mistakes, please raise an issue in <a href="https://github.com/BvdMerwe/whosponsors-nl/issues">GitHub</a>
+            </p>
             <div className="mb-4 flex items-center space-x-2 w-full">
                 <SearchFilter searchStringInitial={tradeName as string | undefined} />
                 <DropdownFilter
@@ -118,6 +122,10 @@ export default async function Home({ searchParams }: {
             </div>
 
             <DataTable columns={columns} data={data} pageIndex={pageIndex} pageCount={pageCount} />
+
+            <footer className="text-sm w-full">
+                <p>Made by <a href="https://github.com/BvdMerwe">@BvdMerwe</a> over a weekend in 2025</p>
+            </footer>
         </div>
     );
 }
