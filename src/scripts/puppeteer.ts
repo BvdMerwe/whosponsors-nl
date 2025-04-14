@@ -62,6 +62,7 @@ async function getBrowser(shouldConnect: boolean): Promise<Browser> {
                 height: 700,
                 width: 1366,
             },
+            slowMo: 50,
         });
     } else {
         return puppeteer.launch({
@@ -77,6 +78,7 @@ async function getBrowser(shouldConnect: boolean): Promise<Browser> {
                 `--user-agent=${getRandomUserAgent()}`,
             ],
             headless: false,
+            slowMo: 50,
         });
     }
 }

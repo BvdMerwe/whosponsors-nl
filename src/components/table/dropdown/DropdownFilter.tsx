@@ -18,6 +18,7 @@ interface DropdownFilterProps {
     allFilter: {
         value: string;
         key: number;
+        _count: number;
     }[];
     filterSelected: number[];
 }
@@ -48,6 +49,7 @@ export function DropdownFilter({ allFilter, filterSelected }: DropdownFilterProp
                         key={filter.key}
                     >
                         {filter.value}
+                        <span className="rounded-full p-1 bg-accent text-xs aspect-square">{filter._count}</span>
                     </DropdownMenuCheckboxItem>
                 ))}
             </DropdownMenuContent>

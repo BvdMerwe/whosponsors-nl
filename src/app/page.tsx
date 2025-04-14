@@ -2,12 +2,12 @@ import type { ReactElement } from "react";
 import React from "react";
 import { columns } from "@/components/table/columns";
 import { DataTable } from "@/components/table/DataTable";
-import type { Company, Industry } from "@/generated/prisma";
+import type { Company } from "@/generated/prisma";
 import { Prisma, PrismaClient } from "@/generated/prisma";
 import { DropdownFilter } from "@/components/table/dropdown/DropdownFilter";
 import { isArray } from "node:util";
-import CompanyWhereInput = Prisma.CompanyWhereInput;
 import SearchFilter from "@/components/table/search/SearchFilter";
+import CompanyWhereInput = Prisma.CompanyWhereInput;
 
 const PAGE_SIZE = 50;
 
@@ -20,7 +20,16 @@ interface PaginationQuery {
 interface PaginatedData {
     data: Company[];
     pageCount: number;
-    allIndustry: Industry[];
+    allIndustry: IndustryWithCount[];
+}
+
+interface IndustryWithCount {
+    id: number;
+    name: string;
+    slug: string;
+    _count: {
+        companies: number;
+    };
 }
 
 async function getData({
@@ -76,7 +85,15 @@ async function getData({
         pageCount: Math.round(await prisma.company.count({
             where: filter,
         }) / PAGE_SIZE),
-        allIndustry: await prisma.industry.findMany(),
+        allIndustry: await prisma.industry.findMany({
+            include: {
+                _count: {
+                    select: {
+                        companies: true,
+                    },
+                },
+            },
+        }),
     };
 }
 
@@ -114,6 +131,7 @@ export default async function Home({ searchParams }: {
                             .map((industry) => ({
                                 value: industry.name,
                                 key: industry.id,
+                                _count: industry._count.companies,
                             }))
                     }
                     filterSelected={allIndustrySelected ?? []}
