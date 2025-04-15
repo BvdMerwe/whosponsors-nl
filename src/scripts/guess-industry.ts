@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import type { Company } from "@/generated/prisma";
 import { PrismaClient } from "@/generated/prisma";
 import Prompter from "@/scripts/prompter";
 import scrapeGoogle from "@/scripts/puppeteer";
@@ -11,22 +12,19 @@ interface IndustryInferredType {
 }
 
 export default async function guessIndustry(): Promise<void> {
-    const prisma = new PrismaClient();
-    let allIndustryString = await determineAllIndustryString(prisma);
+    let allIndustryString = await determineAllIndustryString();
 
     console.log("Fetching all companies");
-    const allSponsor = await prisma.company.findMany({
-        take: 1000,
-        where: {
-            industries: {
-                none: {},
-            },
-        },
-    });
+    const allSponsor = await fetchAllSponsor();
 
     for (const sponsor of allSponsor) {
         console.log("Searching google for", sponsor.tradeName);
         const scrapedInfo = await scrapeGoogle(`What is the industry that ${sponsor.tradeName} operates in?`);
+
+        if (scrapedInfo === "unknown") {
+            console.log("An error occurred - maybe blocked by google - try next company.");
+            continue;
+        }
 
         console.log("Trying to guess industry");
         const industry = await determineIndustryFromScrapedInfo(sponsor.tradeName, allIndustryString, scrapedInfo);
@@ -44,31 +42,15 @@ export default async function guessIndustry(): Promise<void> {
         }
 
         console.log("Updating company: ", sponsor.id);
-        await prisma.company.update({
-            where: {
-                id: sponsor.id,
-            },
-            data: {
-                industries: {
-                    connectOrCreate: [{
-                        create: {
-                            name: industry.industryName as string,
-                            slug: industry.slug as string,
-                        },
-                        where: {
-                            slug: industry.slug,
-                        },
-                    }],
-                },
-            },
-        });
+        updateSponsor(sponsor.id, industry);
 
         // Re-fetch industries so it can be used by the LLM.
-        allIndustryString = await determineAllIndustryString(prisma);
+        allIndustryString = await determineAllIndustryString();
     }
 }
 
-async function determineAllIndustryString(prisma: PrismaClient): Promise<string> {
+async function determineAllIndustryString(): Promise<string> {
+    const prisma = new PrismaClient();
     const allIndustry = await prisma.industry.findMany();
 
     return allIndustry.map((industry) => industry.name).join("\n");
@@ -117,4 +99,40 @@ ${scrapedInfo}
     }
 
     return outputParsed;
+}
+
+function fetchAllSponsor(): Promise<Company[]> {
+    const prisma = new PrismaClient();
+
+    return prisma.company.findMany({
+        take: 5000,
+        where: {
+            industries: {
+                none: {},
+            },
+        },
+    });
+}
+
+async function updateSponsor(sponsorId: number, industry: IndustryInferredType): Promise<void> {
+    const prisma = new PrismaClient();
+
+    await prisma.company.update({
+        where: {
+            id: sponsorId,
+        },
+        data: {
+            industries: {
+                connectOrCreate: [{
+                    create: {
+                        name: industry.industryName as string,
+                        slug: industry.slug as string,
+                    },
+                    where: {
+                        slug: industry.slug,
+                    },
+                }],
+            },
+        },
+    });
 }

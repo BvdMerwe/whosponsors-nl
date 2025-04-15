@@ -5,6 +5,7 @@ interface PrompterOption {
     model?: ResponsesModel;
     instruction: string;
     shouldUseWebSearch?: boolean;
+    isLocal?: boolean;
 }
 
 export default class Prompter {
@@ -15,10 +16,11 @@ export default class Prompter {
     constructor({
         instruction,
         model = "gpt-4o-mini",
+        isLocal = false,
     }: PrompterOption) {
         this.client = new OpenAI({
-            apiKey: process.env.OPENAI_API_KEY,
-            // baseURL: "http://127.0.0.1:11434/v1",
+            apiKey: isLocal ? "ollama" : process.env.OPENAI_API_KEY,
+            baseURL: isLocal ? "http://127.0.0.1:11434/v1" : undefined,
         });
 
         this.instruction = instruction;
@@ -43,7 +45,7 @@ export default class Prompter {
 
     public async promptOllama(prompt: string): Promise<OpenAI.Chat.ChatCompletion> {
         return this.client.chat.completions.create({
-            model: "qwen2.5:3b",
+            model: this.model === "gpt-4o-mini" ? "qwen2.5:3b" : this.model,
             messages: [{
                 role: "developer",
                 content: this.instruction,

@@ -4,6 +4,8 @@ import type {
 } from "puppeteer-core";
 import puppeteer from "puppeteer-core";
 import { NodeHtmlMarkdown } from "node-html-markdown";
+import Random from "@/lib/random";
+import switchVpnLocation from "@/scripts/switch-vpn-location";
 
 export default async function scrapeGoogle(searchQuery: string): Promise<string> {
     const browser = await getBrowser(true);
@@ -30,16 +32,16 @@ export default async function scrapeGoogle(searchQuery: string): Promise<string>
         await searchBar.click();
         await searchBar.fill("");
         await page.type("textarea ::-p-aria([name=\"Search\"])", searchQuery, {
-            delay: randomBetween(10, 30),
+            delay: Random.randomBetween(10, 30),
         });
         await waitForTimeout(30);
         await page.keyboard.press("Enter");
 
-        if (randomBetween(0, 2) === 1) {
+        if (Random.randomBetween(0, 2) === 1) {
             await naturalMouseMovement(page);
         }
 
-        if (randomBetween(0, 3) <= 2) {
+        if (Random.randomBetween(0, 3) <= 2) {
             await naturalMouseScrolling(page);
         }
 
@@ -49,6 +51,14 @@ export default async function scrapeGoogle(searchQuery: string): Promise<string>
         const resultsString = await page.evaluate((el) => el?.innerHTML ?? "", searchResults);
 
         return NodeHtmlMarkdown.translate(resultsString);
+    } catch {
+        if (!page.isClosed()) {
+            await page.close();
+        }
+
+        await switchVpnLocation();
+
+        return "unknown";
     } finally {
         await browser.disconnect();
     }
@@ -62,7 +72,7 @@ async function getBrowser(shouldConnect: boolean): Promise<Browser> {
                 height: 700,
                 width: 1366,
             },
-            slowMo: 50,
+            slowMo: 20,
         });
     } else {
         return puppeteer.launch({
@@ -78,7 +88,7 @@ async function getBrowser(shouldConnect: boolean): Promise<Browser> {
                 `--user-agent=${getRandomUserAgent()}`,
             ],
             headless: false,
-            slowMo: 50,
+            slowMo: 20,
         });
     }
 }
@@ -99,15 +109,11 @@ const userAgents = [
 ];
 
 function getRandomUserAgent(): string {
-    return userAgents[randomBetween(0, userAgents.length)];
+    return userAgents[Random.randomBetween(0, userAgents.length)];
 }
 
 function waitForRandomDelay(min: number = 50, max: number = 200): Promise<void> {
-    return waitForTimeout(randomBetween(min, max));
-}
-
-function randomBetween(min: number = 50, max: number = 200): number {
-    return Math.floor(Math.random() * (max - min) + min);
+    return waitForTimeout(Random.randomBetween(min, max));
 }
 
 function waitForTimeout(millisecond: number = 1000): Promise<void> {
@@ -133,7 +139,7 @@ async function moveMouseToBoundingBox(page: Page, boxModel?: BoxModel | null): P
     pointCenter.y = (content[0].y + content[2].y) / 2 + (Math.random() * variance - variance / 2);
 
     // Randomize the number of steps
-    const steps = randomBetween(20, 40); // 20-40 steps
+    const steps = Random.randomBetween(20, 40); // 20-40 steps
 
     await page.mouse.move(pointCenter.x, pointCenter.y, {
         steps,
@@ -216,7 +222,7 @@ async function naturalMouseMovement(page: Page): Promise<void> {
 
     for (const point of points) {
         await page.mouse.move(point.x, point.y, {
-            steps: randomBetween(10, 20),
+            steps: Random.randomBetween(10, 20),
         });
         await waitForRandomDelay(10, 20);
     }
@@ -226,12 +232,12 @@ async function naturalMouseScrolling(page: Page): Promise<void> {
     console.log("Performing natural scrolling to trick google.");
     await waitForRandomDelay(200, 1000);
 
-    const timesToScroll = randomBetween(2, 5);
+    const timesToScroll = Random.randomBetween(2, 5);
     const scrolls = [];
 
     for (let i = 0; timesToScroll >= i; i++) {
         scrolls.push({
-            deltaY: randomBetween(50, 500),
+            deltaY: Random.randomBetween(50, 500),
         });
     }
 
