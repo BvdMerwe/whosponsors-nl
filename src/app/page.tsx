@@ -86,6 +86,9 @@ async function getData({
             where: filter,
         }) / PAGE_SIZE),
         allIndustry: await prisma.industry.findMany({
+            orderBy: {
+                name: "asc",
+            },
             include: {
                 _count: {
                     select: {
