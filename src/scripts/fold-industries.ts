@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { PrismaClient } from "@/generated/prisma";
 import Prompter from "@/scripts/prompter";
 

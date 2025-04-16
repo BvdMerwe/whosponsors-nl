@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import natural from "natural";
 import { PrismaClient } from "@/generated/prisma";
 

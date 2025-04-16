@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import vpnLocation from "../data/vpn-location.json";
 import { exec } from "node:child_process";
 import Random from "@/lib/random";
