@@ -89,6 +89,11 @@ async function getData({
             orderBy: {
                 name: "asc",
             },
+            where: {
+                companies: {
+                    some: {},
+                },
+            },
             include: {
                 _count: {
                     select: {
