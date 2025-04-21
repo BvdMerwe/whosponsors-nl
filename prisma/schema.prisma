@@ -15,9 +15,10 @@ datasource db {
 }
 
 model Company {
-  id         Int        @id @default(autoincrement())
-  tradeName  String     @unique
-  industries Industry[]
+  id                 Int        @id @default(autoincrement())
+  tradeName          String     @unique
+  registrationNumber String     @unique
+  industries         Industry[]
 }
 
 model Industry {

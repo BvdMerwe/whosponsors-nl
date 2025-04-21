@@ -1,6 +1,11 @@
 import Scraper from "@/lib/Scraper";
 import { PrismaClient } from "@/generated/prisma";
 
+interface CompanySponsor {
+    tradeName: string;
+    registrationNumber: string;
+}
+
 export default async function updateAllSponsor(): Promise<void> {
     const prisma = new PrismaClient();
     const allSponsor = await fetchAllSponsor();
@@ -9,15 +14,19 @@ export default async function updateAllSponsor(): Promise<void> {
     console.log(`Fetched ${allSponsor.length} sponsors`);
 
     for (const company of allSponsor) {
+        const { tradeName, registrationNumber } = company;
+
         await prisma.company.upsert({
             where: {
-                tradeName: company,
+                tradeName,
             },
             update: {
-                tradeName: company,
+                tradeName,
+                registrationNumber,
             },
             create: {
-                tradeName: company,
+                tradeName,
+                registrationNumber,
                 industries: {
                     connect: {
                         id: 1,
@@ -28,7 +37,7 @@ export default async function updateAllSponsor(): Promise<void> {
     }
 }
 
-async function fetchAllSponsor(): Promise<string[]> {
+async function fetchAllSponsor(): Promise<CompanySponsor[]> {
     const scraper = new Scraper({
         url: new URL(
             "https://ind.nl/en/public-register-recognised-sponsors/public-register-regular-labour-and-highly-skilled-migrants",
@@ -45,10 +54,20 @@ async function fetchAllSponsor(): Promise<string[]> {
         throw "TABLE IS EMPTY";
     }
 
-    const allCompanyElement = tableElement.querySelectorAll("tr th");
-    const allCompany: string[] = [];
+    const allCompanyRow = tableElement.querySelectorAll("tr");
+    const allCompany: CompanySponsor[] = [];
 
-    allCompanyElement.forEach((company: Element) => allCompany.push(company.textContent ?? ""));
+    allCompanyRow.forEach((company: Element) => {
+        const tradeName = company.querySelector("th")?.textContent;
+        const registrationNumber = company.querySelector("td")?.textContent;
+
+        if (tradeName && registrationNumber) {
+            allCompany.push({
+                tradeName,
+                registrationNumber,
+            });
+        }
+    });
 
     return allCompany;
 }

@@ -1,15 +1,14 @@
 /* eslint-disable no-console */
 import type {
-    BoxModel, Browser, Page, Point,
+    BoxModel, Browser, ElementHandle, Page, Point,
 } from "puppeteer-core";
 import puppeteer from "puppeteer-core";
 import { NodeHtmlMarkdown } from "node-html-markdown";
 import Random from "@/lib/random";
 import switchVpnLocation from "@/scripts/switch-vpn-location";
 
-export default async function scrapeGoogle(searchQuery: string): Promise<string> {
-    const browser = await getBrowser(true);
-    const page = (await browser.pages())[0] ?? await browser.newPage();
+export async function scrapeGoogle(searchQuery: string): Promise<string | null> {
+    const { browser, page } = await initialize();
 
     try {
         if (page.url().indexOf("https://www.google.com/") < 0) {
@@ -31,7 +30,7 @@ export default async function scrapeGoogle(searchQuery: string): Promise<string>
 
         await searchBar.click();
         await searchBar.fill("");
-        await page.type("textarea ::-p-aria([name=\"Search\"])", searchQuery, {
+        await page.type("textarea ::-p-aria([name=\"Search\"])", `What is the industry that ${searchQuery} operates in?`, {
             delay: Random.randomBetween(10, 30),
         });
         await waitForTimeout(30);
@@ -46,22 +45,114 @@ export default async function scrapeGoogle(searchQuery: string): Promise<string>
         }
 
         await page.waitForSelector("#center_col");
-
-        const searchResults = await page.$("#center_col");
-        const resultsString = await page.evaluate((el) => el?.innerHTML ?? "", searchResults);
+        const resultsString = await getTextContent(page, await page.$("#center_col"));
 
         return NodeHtmlMarkdown.translate(resultsString);
-    } catch {
+    } catch (error: unknown) {
+        // @ts-expect-error - we know it's a TypeError
+        console.error(error.message);
         if (!page.isClosed()) {
+            await page.screenshot({
+                type: "jpeg",
+                path: `screenshots/${Date.now()}.jpg`,
+                fullPage: true,
+                quality: 20,
+            });
             await page.close();
         }
 
         await switchVpnLocation();
+        await waitForTimeout(2000);
 
-        return "unknown";
+        return null;
     } finally {
         await browser.disconnect();
     }
+}
+
+export async function scrapeCreditSafe(searchQuery: string): Promise<string | null> {
+    const { page } = await initialize();
+
+    try {
+        if (page.url().indexOf("creditsafe.com/") < 0) {
+            await page.goto("https://www.creditsafe.com/business-index/en-gb/search/");
+            await waitForTimeout(300);
+        }
+
+        const cookieAcceptButton = await page.$("button ::-p-text(Accept All)");
+
+        if (cookieAcceptButton !== null) {
+            await cookieAcceptButton.click();
+            await waitForTimeout(1000);
+        }
+
+        await page.locator("#main-search > input").fill(searchQuery);
+        await page.keyboard.press("Enter");
+
+        const selector = "body > main > div > div:nth-child(1) > div > ul > li:nth-child(1) > div > div > a";
+
+        await page.waitForSelector(selector, {
+            timeout: 2000,
+        });
+        await page.locator(selector).click();
+
+        const resultsString = await getTextContent(page, await page.locator("#info").waitHandle());
+
+        await page.evaluate(() => window.stop());
+
+        return NodeHtmlMarkdown.translate(resultsString);
+    } catch (error: unknown) {
+        // @ts-expect-error - we know it's a TypeError
+        console.error(`Nothing at creditsafe for ${searchQuery}:`, error.message);
+        await switchVpnLocation();
+        await waitForTimeout(2000);
+        await page.close();
+
+        return null;
+    }
+}
+
+export async function scrapeKvK(searchQuery: string): Promise<string | null> {
+    const { page } = await initialize();
+
+    try {
+        await page.goto("https://www.kvk.nl/en/search/");
+
+        const cookieAcceptButton = await page.$("button ::-p-text(Save your choice)");
+
+        if (cookieAcceptButton !== null) {
+            await cookieAcceptButton.click();
+            await waitForTimeout(1000);
+        }
+
+        const searchBarSelector = "#main-content input[type=search]";
+
+        await page.locator(searchBarSelector).fill("");
+        await page.type(searchBarSelector, searchQuery);
+        await page.keyboard.press("Enter");
+
+        const selector = "[data-ui-test-class='search-results-list'] > li";
+        const element = await page.waitForSelector(selector, {
+            timeout: 2000,
+        });
+        const resultsString = await getTextContent(page, element);
+
+        return NodeHtmlMarkdown.translate(resultsString);
+    } catch (error: unknown) {
+        // @ts-expect-error - we know it's a TypeError
+        console.error(`Nothing at KvK for ${searchQuery}:`, error.message);
+
+        return null;
+    }
+}
+
+async function initialize(): Promise<{ browser: Browser, page: Page }> {
+    const browser = await getBrowser(true);
+
+    return {
+        browser,
+        page: (await browser.pages())[0] ?? await browser.newPage(),
+    };
 }
 
 async function getBrowser(shouldConnect: boolean): Promise<Browser> {
@@ -154,13 +245,15 @@ async function moveMouseToBoundingBoxAndClick(page: Page, boxModel?: BoxModel | 
     await drawBox(page, boxModel);
 
     await moveMouseToBoundingBox(page, boxModel);
-    await page.mouse.down({
-        button: "left",
-    });
-    await waitForRandomDelay(20, 70);
-    await page.mouse.up({
-        button: "left",
-    });
+
+    await page.locator("button ::-p-text(Accept all)").click();
+    // await page.mouse.down({
+    //     button: "left",
+    // });
+    // await waitForRandomDelay(20, 70);
+    // await page.mouse.up({
+    //     button: "left",
+    // });
 }
 
 async function drawBox(page: Page, boxModel?: BoxModel | null): Promise<void> {
@@ -244,5 +337,15 @@ async function naturalMouseScrolling(page: Page): Promise<void> {
     for (const scroll of scrolls) {
         await page.mouse.wheel(scroll);
         await waitForRandomDelay();
+    }
+}
+
+async function getTextContent(page: Page, element?: ElementHandle | null): Promise<string> {
+    if (element === null || typeof element === "undefined") {
+        const body = await page.$("body");
+
+        return await page.evaluate((el) => el?.innerHTML ?? "", body);
+    } else {
+        return await page.evaluate((el) => el?.innerHTML ?? "", element);
     }
 }

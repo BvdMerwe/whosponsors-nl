@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 import natural from "natural";
 import { PrismaClient } from "@/generated/prisma";
+import * as fs from "node:fs";
+import path from "node:path";
 
 interface IndustryGroup {
     industry: string;
@@ -54,6 +56,10 @@ function clusterIndustries(industries: string[], threshold = 0.4): IndustryGroup
 export default async function main(): Promise<void> {
     const industries = await readIndustries();
     const grouped = clusterIndustries(industries, 0.4);
+
+    const currentPath = path.resolve(__dirname);
+
+    fs.writeFileSync(`${currentPath}/folded-industry.json`, JSON.stringify(grouped, null, "\t"));
 
     console.log(grouped);
 }
