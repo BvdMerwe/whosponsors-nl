@@ -26,7 +26,7 @@ export default function RootLayout(
     return (
         <html lang="en">
             <head>
-                <script defer src="https://umami.bernardus.dev/script.js" data-website-id="6486239e-c986-4126-8bb9-587492d237c6"></script>
+                <script defer src="https://overarch.bernardus.dev/overarch" data-website-id="6486239e-c986-4126-8bb9-587492d237c6"></script>
             </head>
             <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
                 {children}
