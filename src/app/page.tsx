@@ -5,7 +5,6 @@ import { DataTable } from "@/components/table/DataTable";
 import type { Company } from "@/generated/prisma";
 import { Prisma, PrismaClient } from "@/generated/prisma";
 import { DropdownFilter } from "@/components/table/dropdown/DropdownFilter";
-import { isArray } from "node:util";
 import SearchFilter from "@/components/table/search/SearchFilter";
 import CompanyWhereInput = Prisma.CompanyWhereInput;
 
@@ -50,7 +49,7 @@ async function getData({
         });
     }
 
-    if (isArray(allIndustry)) {
+    if (Array.isArray(allIndustry)) {
         allIndustry.forEach((industry) => queryIndustry.push({
             industries: {
                 some: {
@@ -106,7 +105,7 @@ async function getData({
 }
 
 export default async function Home({ searchParams }: {
-    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+    searchParams: Promise<{ [_: string]: string | string[] | undefined }>
 }): Promise<ReactElement> {
     const { page, tradeName, industry } = await searchParams;
     let pageParsed = parseInt(page as string);

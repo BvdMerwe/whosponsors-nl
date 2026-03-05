@@ -2,7 +2,7 @@ import type { NextRequest, NextResponse } from "next/server";
 import middlewareCron from "@/middleware/cron-middleware";
 
 // This function can be marked `async` if using `await` inside
-export function middleware(request: NextRequest): NextResponse {
+export function proxy(request: NextRequest): NextResponse {
     return middlewareCron(request);
 }
 
