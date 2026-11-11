@@ -2459,16 +2459,16 @@ packages:
       socks:
         optional: true
 
-  mongoose@8.24.0:
-    resolution: {integrity: sha512-EEZwOibDPZ5uZN3bFapfnRskEbdljAf6sP9ln6u+P4e5IfkOAh6Tqw2g8/Tag++KHOAJ095WXT/c0uqRq4Vckg==}
+  mongoose@8.24.8:
+    resolution: {integrity: sha512-p6g/mvvW2PJlC3lgzQJ7PECArfaOTKWJVG/KHf67WYU3MvJ72ZWdv5u7syFRe881IjALMZpKwffNE97G10HTzg==}
     engines: {node: '>=16.20.1'}
 
   mpath@0.9.0:
     resolution: {integrity: sha512-ikJRQTk8hw5DEoFVxHG1Gn9T/xcjtdnOKIU1JTmGjZZlg9LST2mBLmcX3/ICIbgJydT2GOc15RnNy5mHmzfSew==}
     engines: {node: '>=4.0.0'}
 
-  mquery@5.0.0:
-    resolution: {integrity: sha512-iQMncpmEK8R8ncT8HJGsGc9Dsp8xcgYMVSbs5jgnm1lFHTZqMJTUWTDx1LBO8+mK3tPNZWFLBghQEIOULSTHZg==}
+  mquery@5.0.1:
+    resolution: {integrity: sha512-C99lWV0TFI34pS008jBsi3JrE2xZPnTgUw5yApQR71nRP0hxLy8D5m1Lbbk83c8AQWJwdJ0329HzFtZ1MRTUIw==}
     engines: {node: '>=14.0.0'}
 
   ms@2.1.3:
@@ -5611,13 +5611,13 @@ snapshots:
     optionalDependencies:
       socks: 2.8.4
 
-  mongoose@8.24.0(socks@2.8.4)(supports-color@7.2.0):
+  mongoose@8.24.8(socks@2.8.4)(supports-color@7.2.0):
     dependencies:
       bson: 6.10.4
       kareem: 2.6.3
       mongodb: 6.20.0(socks@2.8.4)
       mpath: 0.9.0
-      mquery: 5.0.0(supports-color@7.2.0)
+      mquery: 5.0.1(supports-color@7.2.0)
       ms: 2.1.3
       sift: 17.1.3
     transitivePeerDependencies:
@@ -5632,9 +5632,9 @@ snapshots:
 
   mpath@0.9.0: {}
 
-  mquery@5.0.0(supports-color@7.2.0):
+  mquery@5.0.1(supports-color@7.2.0):
     dependencies:
-      debug: 4.4.0(supports-color@7.2.0)
+      debug: 4.4.3(supports-color@7.2.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -5654,7 +5654,7 @@ snapshots:
       dotenv: 16.5.0
       http-server: 14.1.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
       memjs: 1.3.2
-      mongoose: 8.24.0(socks@2.8.4)(supports-color@7.2.0)
+      mongoose: 8.24.8(socks@2.8.4)(supports-color@7.2.0)
       pg: 8.14.1
       redis: 4.7.0
       safe-stable-stringify: 2.5.0
